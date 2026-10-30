@@ -62,19 +62,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return age;
     }
 
-    // LOCAL STORAGE VERİLERİ
+    // LOCAL STORAGE VERİLERİ (Tamamen boş olarak başlatılır)
     let users = JSON.parse(localStorage.getItem('bt_users')) || {};
-    let skills = JSON.parse(localStorage.getItem('bt_skills')) || [
-        { name: "Ahmet K.", offered: "1 Saat Java Temelleri", wanted: "1 Saat Gitar Dersi" },
-        { name: "Ayşe M.", offered: "İspanyolca Konuşma Pratiği", wanted: "HTML/CSS Tasarım Yardımı" }
-    ];
+    let skills = JSON.parse(localStorage.getItem('bt_skills')) || [];
     let privateMessages = JSON.parse(localStorage.getItem('bt_messages')) || {};
-
-    if (!users["ahmet@mail.com"]) {
-        users["ahmet@mail.com"] = { name: "Ahmet K.", email: "ahmet@mail.com", phone: "05551112233", password: "123", birthDate: "2000-05-15", rating: "4.9 ★", swaps: 14, bio: "Java ve backend uzmanı." };
-        users["ayse@mail.com"] = { name: "Ayşe M.", email: "ayse@mail.com", phone: "05559998877", password: "123", birthDate: "2002-09-20", rating: "5.0 ★", swaps: 22, bio: "İspanyolca eğitmeni." };
-        saveUsers();
-    }
 
     function saveUsers() { localStorage.setItem('bt_users', JSON.stringify(users)); }
     function saveSkills() { localStorage.setItem('bt_skills', JSON.stringify(skills)); }
@@ -234,6 +225,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // İlanları Listeleme
     function renderCards() {
         skillList.innerHTML = '';
+
+        if (skills.length === 0) {
+            skillList.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">Henüz yayınlanmış bir ilan bulunmuyor. İlk ilanı sen yayınla!</p>';
+            return;
+        }
+
         skills.forEach(item => {
             const card = document.createElement('div');
             card.className = 'skill-card';
@@ -259,9 +256,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.startChatWith = function(targetUser) {
         activeChatTarget = targetUser;
         if (!privateMessages[targetUser]) {
-            privateMessages[targetUser] = [
-                { sender: targetUser, text: `Merhaba! Benimle iletişime geçtiğin için teşekkürler. İlanım hakkında konuşabiliriz.` }
-            ];
+            privateMessages[targetUser] = [];
             saveMessages();
         }
         showProfileView();
@@ -293,12 +288,16 @@ document.addEventListener('DOMContentLoaded', () => {
         chatTargetUser.textContent = activeChatTarget;
         chatForm.classList.remove('hidden');
 
-        privateMessages[activeChatTarget].forEach(msg => {
-            const msgDiv = document.createElement('div');
-            msgDiv.className = msg.sender === currentUser.name ? 'msg msg-sent' : 'msg msg-received';
-            msgDiv.textContent = msg.text;
-            chatBox.appendChild(msgDiv);
-        });
+        if (privateMessages[activeChatTarget].length === 0) {
+            chatBox.innerHTML = '<p class="placeholder-msg">Sohbeti başlatmak için aşağıdan ilk mesajınızı yazın.</p>';
+        } else {
+            privateMessages[activeChatTarget].forEach(msg => {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = msg.sender === currentUser.name ? 'msg msg-sent' : 'msg msg-received';
+                msgDiv.textContent = msg.text;
+                chatBox.appendChild(msgDiv);
+            });
+        }
 
         chatBox.scrollTop = chatBox.scrollHeight;
     }
