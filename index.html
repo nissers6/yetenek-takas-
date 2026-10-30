@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yetenek Takası - Barter Skills</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Yetenek & Hobi Takası</h1>
+        <p>Paranın geçmediği, sadece zaman ve yeteneğin paylaşıldığı topluluk.</p>
+        
+        <!-- Üst Gezinti Menüsü -->
+        <nav id="topNav" class="nav-bar hidden">
+            <button type="button" id="navHomeBtn" class="nav-btn active">Ana Sayfa & İlanlar</button>
+            <button type="button" id="navProfileBtn" class="nav-btn">Profilim & Mesajlarım</button>
+            <button type="button" id="logoutBtn" class="logout-btn">Çıkış Yap</button>
+        </nav>
+    </header>
+
+    <main class="container">
+        <!-- GİRİŞ & KAYIT PANENİ -->
+        <section class="card" id="authSection">
+            <div class="auth-tabs">
+                <button type="button" class="tab-btn active" id="loginTab">Giriş Yap</button>
+                <button type="button" class="tab-btn" id="registerTab">Kayıt Ol</button>
+            </div>
+
+            <!-- Giriş Formu -->
+            <form id="loginForm">
+                <input type="email" id="loginEmail" placeholder="E-posta Adresiniz" required>
+                <input type="password" id="loginPassword" placeholder="Şifreniz" required>
+                <button type="submit">Giriş Yap</button>
+            </form>
+
+            <!-- Kayıt Formu -->
+            <form id="registerForm" class="hidden">
+                <input type="text" id="regName" placeholder="Adınız Soyadınız" required>
+                <label for="regBirthDate" style="margin-top: 5px;">Doğum Tarihiniz:</label>
+                <input type="date" id="regBirthDate" required>
+                <input type="tel" id="regPhone" placeholder="Telefon Numaranız (05XX...)" required>
+                <input type="email" id="regEmail" placeholder="E-posta Adresiniz" required>
+                <input type="password" id="regPassword" placeholder="Şifreniz" required>
+                <button type="submit">Kayıt Ol ve Katıl</button>
+            </form>
+        </section>
+
+        <!-- ANA SAYFA (İLANLAR) -->
+        <div id="homeView" class="hidden">
+            <section class="card">
+                <h2>İlan Oluştur</h2>
+                <form id="skillForm">
+                    <input type="text" id="offered" placeholder="Sunabileceğiniz Yetenek (Örn: 1 Saat HTML/CSS)" required>
+                    <input type="text" id="wanted" placeholder="Aradığınız Yetenek (Örn: 1 Saat İngilizce Pratik)" required>
+                    <button type="submit">İlanı Yayınla</button>
+                </form>
+            </section>
+
+            <section>
+                <h2>Aktif Takas İlanları</h2>
+                <div id="skillList" class="grid">
+                    <!-- İlanlar JS ile yüklenir -->
+                </div>
+            </section>
+        </div>
+
+        <!-- PROFİLİM VE MESAJLARIM SAYFASI -->
+        <div id="profileView" class="hidden">
+            <section class="card">
+                <h2>Profil Bilgilerim</h2>
+                <form id="myProfileForm">
+                    <label>Ad Soyad:</label>
+                    <input type="text" id="myProfileName" disabled readonly style="background: #242424;">
+                    
+                    <label>E-posta:</label>
+                    <input type="text" id="myProfileEmail" disabled readonly style="background: #242424;">
+
+                    <label>Telefon Numarası (Gizli Bilgi):</label>
+                    <input type="tel" id="myProfilePhone" required>
+
+                    <label>Doğum Tarihi:</label>
+                    <input type="date" id="myProfileBirthDate" required>
+                    
+                    <label>Hakkımda & Uzmanlıklar:</label>
+                    <textarea id="myProfileBio" rows="3" class="custom-textarea" required></textarea>
+                    
+                    <button type="submit">Bilgileri Güncelle</button>
+                </form>
+            </section>
+
+            <section class="card">
+                <h2>Mesajlarım & Sohbet Geçmişi</h2>
+                <div class="chat-container">
+                    <div class="chat-sidebar">
+                        <h4>Konuşmalar</h4>
+                        <ul id="conversationList"></ul>
+                    </div>
+                    <div class="chat-main">
+                        <div class="chat-header">
+                            <h3 id="chatTargetUser">Sohbet Seçin</h3>
+                        </div>
+                        <div class="chat-box" id="chatBox">
+                            <p class="placeholder-msg">Sol taraftan bir konuşma seçin veya ilan sahiplerine mesaj gönderin.</p>
+                        </div>
+                        <form id="chatForm" class="chat-input-area hidden">
+                            <input type="text" id="chatInput" placeholder="Mesajınızı yazın..." required>
+                            <button type="submit">Gönder</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- İlan Sahibi Profil Modalı -->
+    <div id="profileModal" class="modal hidden">
+        <div class="modal-content">
+            <span id="closeModalBtn" class="close-modal">&times;</span>
+            <div class="profile-card">
+                <div class="avatar" id="modalAvatar">A</div>
+                <h2 id="modalName">Kullanıcı Adı</h2>
+                <p class="role" id="modalAge">Yaş: -</p>
+                <div class="stats">
+                    <div>
+                        <strong id="modalRating">5.0 ★</strong>
+                        <span>Güven Puanı</span>
+                    </div>
+                    <div>
+                        <strong id="modalSwaps">0</strong>
+                        <span>Takas Sayısı</span>
+                    </div>
+                </div>
+                <div class="bio">
+                    <h4>Hakkında & Uzmanlıklar:</h4>
+                    <p id="modalBio">Topluluk üyesi.</p>
+                </div>
+                <button type="button" id="modalChatBtn" class="primary-btn">Özel Mesaj Gönder</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
